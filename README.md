@@ -1,4 +1,4 @@
-### Dor Shaer - Cyber Security Analyst ⚡
+### Dor Shaer - Security Researcher & Success Engineer ⚡
 
 Feel free to contact me! kAssofer@gmail.com
 </br>
