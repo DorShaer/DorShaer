@@ -60,7 +60,7 @@ Security engineer who builds his own tooling. I hunt vulnerabilities across web 
 </a>
 
 <a href="https://github.com/DorShaer">
-  <img src="https://streak-stats.demolab.com?user=DorShaer&theme=tokyonight&hide_border=true" alt="Streak" />
+  <img src="https://streak-stats.demolab.com?user=DorShaer&theme=tokyonight&hide_border=true&disable_animations=true" alt="Streak" />
 </a>
 
 </div>
