@@ -51,12 +51,16 @@ Security engineer who builds his own tooling. I hunt vulnerabilities across web 
 <div align="center">
 
 <a href="https://github.com/DorShaer">
-  <img height="165" src="https://github-readme-stats.vercel.app/api?username=DorShaer&show_icons=true&theme=tokyonight&hide_border=true&include_all_commits=true&count_private=true" alt="GitHub stats" />
-  <img height="165" src="https://github-readme-stats.vercel.app/api/top-langs/?username=DorShaer&layout=compact&theme=tokyonight&hide_border=true&langs_count=8&exclude_repo=zlib,runtime,crystal" alt="Top languages" />
+  <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=DorShaer&theme=tokyonight" alt="Profile details" />
 </a>
 
 <a href="https://github.com/DorShaer">
-  <img src="https://github-readme-streak-stats.herokuapp.com?user=DorShaer&theme=tokyonight&hide_border=true" alt="Streak" />
+  <img height="180" src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=DorShaer&theme=tokyonight" alt="GitHub stats" />
+  <img height="180" src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=DorShaer&theme=tokyonight" alt="Top languages by commit" />
+</a>
+
+<a href="https://github.com/DorShaer">
+  <img src="https://streak-stats.demolab.com?user=DorShaer&theme=tokyonight&hide_border=true" alt="Streak" />
 </a>
 
 </div>
