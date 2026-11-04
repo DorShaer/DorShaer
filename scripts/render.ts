@@ -46,11 +46,11 @@ const weeks: number[] = cc.contributionCalendar.weeks.map((w: any) =>
   w.contributionDays.reduce((a: number, d: any) => a + d.contributionCount, 0),
 );
 
-// Visual constants
-const W = 1200;
+// Visual constants. Width matches the README column so text renders 1:1 instead of being scaled down.
+const W = 860;
 const BG = "#0d1117";
-const INK = "#c9d1d9";
-const DIM = "#6e7681";
+const INK = "#e6edf3";
+const DIM = "#8b949e";
 const LINE = "#30363d";
 const ACCENT = "#7b8cde";
 const GREEN = "#3fb950";
@@ -90,13 +90,14 @@ function pixelText(text: string, x: number, y: number, px: number, color: string
 }
 const pixelWidth = (text: string, px: number) => [...text].reduce((a, ch) => a + (ch === "," ? 4 : 6) * px, 0);
 
-function label(text: string, x: number, y: number, anchor = "start", color = ACCENT) {
-  return `<text x="${x}" y="${y}" font-family="${MONO}" font-size="10" letter-spacing="1.5" fill="${color}" text-anchor="${anchor}">${esc(text.toUpperCase())}</text>`;
+function label(text: string, x: number, y: number, anchor = "start", color = ACCENT, size = 12) {
+  return `<text x="${x}" y="${y}" font-family="${MONO}" font-size="${size}" letter-spacing="1.5" fill="${color}" text-anchor="${anchor}">${esc(text.toUpperCase())}</text>`;
 }
-function body(text: string, x: number, y: number, size = 13, color = INK, anchor = "start", weight = 400) {
+function body(text: string, x: number, y: number, size = 16, color = INK, anchor = "start", weight = 400) {
   return `<text x="${x}" y="${y}" font-family="${MONO}" font-size="${size}" font-weight="${weight}" fill="${color}" text-anchor="${anchor}">${esc(text)}</text>`;
 }
-const rule = (y: number, x1 = 40, x2 = W - 40) => `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${LINE}"/>`;
+const M = 32;
+const rule = (y: number, x1 = M, x2 = W - M) => `<line x1="${x1}" y1="${y}" x2="${x2}" y2="${y}" stroke="${LINE}"/>`;
 
 // Area chart of weekly contributions
 function areaChart(x: number, y: number, w: number, h: number): string {
@@ -112,111 +113,104 @@ let y = 0;
 const parts: string[] = [];
 parts.push(`<rect width="${W}" height="100%" fill="${BG}"/>`);
 
-y = 40;
-parts.push(label("FIG_000 / SECURITY ENGINEER PROFILE", 40, y), label(`@${USER}`, W - 40, y, "end", DIM));
-y += 50;
-parts.push(body("DOR SHAER", 40, y, 44, INK, "start", 700));
-y += 28;
-parts.push(body("Security engineer who builds his own tooling.", 40, y, 16));
-y += 22;
-parts.push(label("WEB & API PENTESTING  ·  BUG BOUNTY  ·  DAST AT BRIGHT SECURITY  ·  TOOLS FOR AI CODING AGENTS", 40, y, "start", DIM));
-y += 24;
+y = 44;
+parts.push(label("FIG_000 / SECURITY ENGINEER PROFILE", M, y), label(`@${USER}`, W - M, y, "end", DIM));
+y += 58;
+parts.push(body("DOR SHAER", M, y, 52, INK, "start", 700));
+y += 34;
+parts.push(body("Security engineer who builds his own tooling.", M, y, 19));
+y += 26;
+parts.push(label("WEB & API PENTESTING  ·  BUG BOUNTY  ·  DAST AT BRIGHT SECURITY  ·  AI AGENT TOOLS", M, y, "start", DIM, 11));
+y += 26;
 parts.push(rule(y));
 
 // Hero: contributions + chart
-y += 24;
-const heroPx = 12;
+y += 30;
+const heroPx = 13;
+const chartW = 500;
 const heroText = fmt(cc.contributionCalendar.totalContributions);
-parts.push(label("FIG_001 / CONTRIBUTIONS, LAST 365 DAYS", 40, y));
-parts.push(pixelText(heroText, 40, y + 16, heroPx, ACCENT));
-parts.push(label("PUBLIC CONTRIBUTIONS", 40 + pixelWidth(heroText, heroPx) + 20, y + 16 + 7 * heroPx - 4, "start", DIM));
-parts.push(areaChart(40, y + 120, 700, 70));
-parts.push(label("52 WEEKS AGO", 40, y + 206, "start", DIM), label("THIS WEEK", 740, y + 206, "end", DIM));
+parts.push(label("FIG_001 / CONTRIBUTIONS, LAST 365 DAYS", M, y));
+parts.push(pixelText(heroText, M, y + 18, heroPx, ACCENT));
+parts.push(label("PUBLIC", M + pixelWidth(heroText, heroPx) + 20, y + 18 + 7 * heroPx - 4, "start", DIM, 11));
+parts.push(areaChart(M, y + 136, chartW, 80));
+parts.push(label("52 WEEKS AGO", M, y + 234, "start", DIM, 11), label("THIS WEEK", M + chartW, y + 234, "end", DIM, 11));
 
-// Right column: focus areas as bars
-const fx = 800;
+// Right column: focus areas
+const fx = M + chartW + 44;
 parts.push(label("FIG_002 / FOCUS", fx, y));
-const focus: [string, number][] = [
-  ["OFFENSIVE SECURITY", 0.95],
-  ["SECURITY TOOLING", 0.85],
-  ["AI AGENT WORKFLOWS", 0.8],
-  ["DAST ENGINEERING", 0.75],
-  ["RESEARCH & WRITEUPS", 0.45],
-];
-focus.forEach(([name, v], i) => {
-  const by = y + 28 + i * 34;
-  parts.push(label(name, fx, by, "start", INK));
-  parts.push(`<rect x="${fx}" y="${by + 6}" width="${W - 40 - fx}" height="6" fill="${LINE}"/>`);
-  parts.push(`<rect x="${fx}" y="${by + 6}" width="${((W - 40 - fx) * v).toFixed(0)}" height="6" fill="${ACCENT}"/>`);
+["Offensive security", "Security tooling", "AI agent workflows", "DAST engineering", "Research & writeups"].forEach((name, i) => {
+  const fy = y + 40 + i * 40;
+  parts.push(`<rect x="${fx}" y="${fy - 10}" width="10" height="10" fill="${ACCENT}"/>`);
+  parts.push(body(name, fx + 22, fy, 17, INK));
 });
-parts.push(`<line x1="770" y1="${y - 10}" x2="770" y2="${y + 210}" stroke="${LINE}"/>`);
-y += 230;
+parts.push(`<line x1="${fx - 22}" y1="${y - 12}" x2="${fx - 22}" y2="${y + 236}" stroke="${LINE}"/>`);
+y += 256;
 parts.push(rule(y));
 
 // Stat row
-y += 16;
+y += 22;
 const stats: [string, string][] = [
   [fmt(stars), "OWNED STARS"],
   [fmt(cc.totalCommitContributions), "COMMITS / 365D"],
   [fmt(cc.totalPullRequestContributions), "PRS / 365D"],
   [fmt(cc.totalIssueContributions), "ISSUES / 365D"],
-  [fmt(cc.totalPullRequestReviewContributions), "REVIEWS / 365D"],
   [fmt(u.repositories.totalCount), "PUBLIC REPOS"],
-  [fmt(u.followers.totalCount), "FOLLOWERS"],
 ];
 stats.forEach(([v, name], i) => {
-  const sx = 40 + i * 160;
-  parts.push(pixelText(v, sx, y + 8, 4, ACCENT));
-  parts.push(label(name, sx, y + 52, "start", DIM));
+  const sx = M + i * 160;
+  parts.push(pixelText(v, sx, y + 8, 5, ACCENT));
+  parts.push(label(name, sx, y + 62, "start", DIM, 11));
 });
-y += 70;
+y += 84;
 parts.push(rule(y));
 
 // Featured project
+y += 34;
+parts.push(label("FIG_003 / FEATURED PROJECT", M, y));
+parts.push(label(`PUSHED ${new Date(r.pushedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}`, W - M, y, "end", DIM, 11));
+y += 38;
+parts.push(body(FEATURED, M, y, 30, INK, "start", 700));
+parts.push(label(`${fmt(r.stargazerCount)} STARS  /  ${fmt(r.forkCount)} FORKS`, M + FEATURED.length * 18 + 24, y - 4, "start", GREEN, 13));
 y += 30;
-parts.push(label("FIG_003 / FEATURED PROJECT", 40, y));
-parts.push(label(`PUSHED ${new Date(r.pushedAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}`, W - 40, y, "end", DIM));
-y += 32;
-parts.push(body(FEATURED, 40, y, 24, INK, "start", 700));
-parts.push(label(`${fmt(r.stargazerCount)} STARS  /  ${fmt(r.forkCount)} FORKS`, 40 + FEATURED.length * 15 + 20, y - 2, "start", GREEN));
-y += 24;
 const langTotal = r.languages.edges.reduce((a: number, e: any) => a + e.size, 0);
-const descLines = (r.description ?? "").match(/.{1,110}(\s|$)/g) ?? [];
-descLines.forEach((line: string) => { parts.push(body(line.trim(), 40, y, 13, INK)); y += 18; });
-y += 6;
-let lx = 40;
-const barW = W - 80;
+const descLines = (r.description ?? "").match(/.{1,80}(\s|$)/g) ?? [];
+descLines.forEach((line: string) => { parts.push(body(line.trim(), M, y, 15, INK)); y += 22; });
+y += 8;
+let lx = M;
+const barW = W - 2 * M;
 r.languages.edges.forEach((e: any) => {
   const w = (e.size / langTotal) * barW;
-  parts.push(`<rect x="${lx.toFixed(1)}" y="${y}" width="${w.toFixed(1)}" height="8" fill="${e.node.color ?? DIM}"/>`);
+  parts.push(`<rect x="${lx.toFixed(1)}" y="${y}" width="${w.toFixed(1)}" height="10" fill="${e.node.color ?? DIM}"/>`);
   lx += w;
 });
-y += 24;
+y += 30;
 r.languages.edges.forEach((e: any, i: number) => {
   const pct = ((e.size / langTotal) * 100).toFixed(1);
-  parts.push(`<circle cx="${44 + i * 180}" cy="${y - 4}" r="4" fill="${e.node.color ?? DIM}"/>`);
-  parts.push(label(`${e.node.name} ${pct}%`, 56 + i * 180, y, "start", INK));
+  parts.push(`<circle cx="${M + 5 + i * 190}" cy="${y - 5}" r="5" fill="${e.node.color ?? DIM}"/>`);
+  parts.push(label(`${e.node.name} ${pct}%`, M + 20 + i * 190, y, "start", INK, 12));
 });
-y += 24;
+y += 28;
 parts.push(rule(y));
 
 // Tech stack
-y += 30;
-parts.push(label("FIG_004 / TECH STACK", 40, y));
-y += 16;
-["TypeScript", "Bun", "Python", "Electron", "Burp Suite", "Docker", "OpenSearch"].forEach((t, i) => {
-  const bx = 40 + i * 162;
-  parts.push(`<rect x="${bx}" y="${y}" width="150" height="32" fill="none" stroke="${LINE}"/>`);
-  parts.push(body(t, bx + 12, y + 21, 13, INK));
+y += 34;
+parts.push(label("FIG_004 / TECH STACK", M, y));
+y += 18;
+const tech = ["TypeScript", "Bun", "Python", "Electron", "Burp Suite", "Docker", "OpenSearch"];
+const boxW = (W - 2 * M - (tech.length - 1) * 10) / tech.length;
+tech.forEach((t, i) => {
+  const bx = M + i * (boxW + 10);
+  parts.push(`<rect x="${bx.toFixed(1)}" y="${y}" width="${boxW.toFixed(1)}" height="40" fill="none" stroke="${LINE}"/>`);
+  parts.push(body(t, bx + boxW / 2, y + 26, 15, INK, "middle"));
 });
-y += 56;
+y += 66;
 parts.push(rule(y));
 
 // Footer
-y += 26;
-parts.push(label("HACKERONE  kassofer   ·   dor.shaer@gmail.com   ·   ISRAEL", 40, y, "start", INK));
-parts.push(label(`PUBLIC DATA ONLY  ·  UPDATED ${date}`, W - 40, y, "end", DIM));
 y += 30;
+parts.push(label("HACKERONE  kassofer   ·   dor.shaer@gmail.com   ·   ISRAEL", M, y, "start", INK, 12));
+parts.push(label(`UPDATED ${date}`, W - M, y, "end", DIM, 11));
+y += 34;
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${y}" viewBox="0 0 ${W} ${y}" role="img" aria-label="Dor Shaer GitHub profile dashboard">${parts.join("")}</svg>`;
 await Bun.write("assets/profile.svg", svg);

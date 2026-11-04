@@ -8,6 +8,4 @@
 
 [Husk](https://github.com/DorShaer/Husk) · [HackerOne](https://hackerone.com/kassofer) · [Email](mailto:dor.shaer@gmail.com)
 
-<sub>Public statistics refresh daily from the GitHub API.</sub>
-
 </div>
